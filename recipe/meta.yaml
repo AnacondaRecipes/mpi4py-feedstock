@@ -1,26 +1,33 @@
 {% set version = '3.0.3' %}
 {% set mpi = mpi or 'mpich' %}
-
+# Anaconda Recipe
 package:
   name: mpi4py
   version: {{ version }}
 
 source:
   fn: mpi4py-{{ version }}.tar.gz
-  url: https://bitbucket.org/mpi4py/mpi4py/downloads/mpi4py-{{ version }}.tar.gz
+  # url: https://bitbucket.org/mpi4py/mpi4py/downloads/mpi4py-{{ version }}.tar.gz
+  url: https://github.com/mpi4py/mpi4py/releases/download/{{ version }}/mpi4py-{{ version }}.tar.gz
   sha256: 012d716c8b9ed1e513fcc4b18e5af16a8791f51e6d1716baccf988ad355c5a1f
+  # patches:
+    # - 000-patch-openmpi.patch 
 
 build:
-  number: 0
-  script: pip install --no-deps .
+  number: 1
+  script: 
+    #added based on conda forge
+    - export OPAL_PREFIX=$PREFIX   # [mpi == "openmpi"]
+    - {{ PYTHON }} -m pip install --no-deps . -vv 
   # TODO: build with msmpi when it works
   skip: true  # [win]
 
 requirements:
   build:
+    - python                              # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}  # [build_platform != target_platform] 
     - {{ compiler('c') }}
-    - mpich    # Test and see
-    - binutil  # Try and see
+    - {{ mpich }}                         # [build_platform != target_platform and mpi == "openmpi"]
   host:
     - python
     - pip
@@ -29,7 +36,9 @@ requirements:
     - python
     - {{ mpi }}
 
-test: {}
+  test:
+    requires:
+      - {{ mpi }}
 
 about:
   home: https://mpi4py.bitbucket.io/
