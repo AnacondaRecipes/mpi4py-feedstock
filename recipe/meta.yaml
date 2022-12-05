@@ -40,7 +40,7 @@ about:
      standard for the Python programming language, allowing any Python program
      to exploit multiple processors.
   doc_url: https://mpi4py.readthedocs.org/
-  dev_url: https://bitbucket.org/mpi4py/mpi4py
+  dev_url: https://github.com/mpi4py/mpi4py
 
 extra:
   recipe-maintainers:
