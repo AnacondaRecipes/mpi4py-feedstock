@@ -1,5 +1,6 @@
 {% set version = '3.1.4' %}
-{% set mpi = mpi or 'mpich' %}
+{% set mpi = mpi or 'mpich' %}  # [not win] 
+{% set mpi = mpi or 'msmpi' %}  # [win] 
 
 package:
   name: mpi4py
