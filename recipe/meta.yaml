@@ -1,4 +1,4 @@
-{% set version = '3.0.3' %}
+{% set version = '3.1.4' %}
 {% set mpi = mpi or 'mpich' %}
 
 package:
@@ -7,8 +7,8 @@ package:
 
 source:
   fn: mpi4py-{{ version }}.tar.gz
-  url: https://bitbucket.org/mpi4py/mpi4py/downloads/mpi4py-{{ version }}.tar.gz
-  sha256: a9f8f549781a2757988eb536fd5f088d8b1f94c2a79ed9724c12f9a6f7d188d1
+  url: https://github.com/mpi4py/mpi4py/releases/download/{{ version }}/mpi4py-{{ version }}.tar.gz
+  sha256: 17858f2ebc623220d0120d1fa8d428d033dde749c4bc35b33d81a66ad7f93480
 
 build:
   number: 0
