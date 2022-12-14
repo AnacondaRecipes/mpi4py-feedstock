@@ -13,8 +13,6 @@ source:
 build:
   number: 0
   script: pip install --no-deps .
-  # TODO: build with msmpi when it works
-  skip: true  # [win]
 
 requirements:
   build:
