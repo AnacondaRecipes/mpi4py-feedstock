@@ -12,7 +12,10 @@ source:
 
 build:
   number: 0
-  script: pip install --no-deps .
+  script: 
+    - {{ PYTHON }} conf/cythonize.py
+    - {{ PYTHON }} -m pip install --no-deps . -vv
+  skip: True  # [py<37]
 
 requirements:
   build:
@@ -20,6 +23,7 @@ requirements:
   host:
     - python
     - pip
+    - cython
     - {{ mpi }}
   run:
     - python
