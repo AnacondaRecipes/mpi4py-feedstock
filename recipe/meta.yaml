@@ -16,7 +16,8 @@ build:
   script: 
     - {{ PYTHON }} conf/cythonize.py
     - {{ PYTHON }} -m pip install --no-deps . -vv
-  skip: True  # [py<37]
+  # s390x is missing a mpi variant (no openmpi or mpich)
+  skip: True  # [py<37 or s390x]
 
 requirements:
   build:
