@@ -31,7 +31,7 @@ requirements:
 test: {}
 
 about:
-  home: hhttps://github.com/mpi4py/mpi4py
+  home: https://github.com/mpi4py/mpi4py
   license: BSD-2-Clause
   license_family: BSD
   license_file: LICENSE.rst
