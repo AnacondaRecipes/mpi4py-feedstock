@@ -21,7 +21,8 @@ build:
 
 requirements:
   build:
-    - {{ compiler('c') }}
+    - {{ compiler('c') }}  # [not (linux and x86_64)]
+    - gcc_linux-64 7.5     # [linux and x86_64]
   host:
     - python
     - pip
