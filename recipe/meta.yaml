@@ -38,7 +38,9 @@ requirements:
     - python
     - {{ mpi }}
 
-test: {}
+test:
+  requires:
+    - pip
 
 about:
   home: https://github.com/mpi4py/mpi4py
