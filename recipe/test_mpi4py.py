@@ -13,8 +13,6 @@ print(MPI.Get_library_version())
 config = mpi4py.get_config()
 print(f"config={config}")
 for name in ("mpicc", "mpicxx", "mpifort"):
-    if name in config:
-        path = config[name]
-        assert os.path.exists(path), f"{name} missing: {path}"
-    else:
-        raise(Exception(f"Missing {name}"))
+    assert name in config
+    path = config[name]
+    assert os.path.exists(path), f"{name} missing: {path}"
