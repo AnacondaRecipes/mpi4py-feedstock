@@ -26,6 +26,8 @@ requirements:
     - python
     - pip
     - cython
+    - setuptools
+    - wheel
     - {{ mpi }}
   run:
     - python
