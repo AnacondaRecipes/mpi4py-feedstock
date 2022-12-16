@@ -1,6 +1,11 @@
 {% set version = '3.1.4' %}
-{% set mpi = mpi or 'mpich' %}  # [not win] 
-{% set mpi = mpi or 'msmpi' %}  # [win] 
+
+{% if win %}
+  # msmpi is the only MPI variant for Windows
+  {% set mpi ='msmpi' %}
+{% else %}
+  {% set mpi = mpi or 'mpich' %}
+{% endif %}
 
 package:
   name: mpi4py
