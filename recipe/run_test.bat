@@ -5,8 +5,13 @@ set OMPI_ALLOW_RUN_AS_ROOT=1
 set OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 
 mpiexec -n 2 python -m mpi4py.bench helloworld
+if errorlevel 1 exit 1
+
 mpiexec -n 2 python -m mpi4py.bench ringtest
+if errorlevel 1 exit 1
 
 python %RECIPE_DIR%\test_mpi4py.py
+if errorlevel 1 exit 1
 
 pip check
+if errorlevel 1 exit 1
