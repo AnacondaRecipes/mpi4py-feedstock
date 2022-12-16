@@ -17,4 +17,4 @@ for name in ("mpicc", "mpicxx", "mpifort"):
         path = config[name]
         assert os.path.exists(path), f"{name} missing: {path}"
     else:
-        print(f"Missing {name}")
+        raise(Exception(f"Missing {name}"))
