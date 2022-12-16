@@ -10,3 +10,5 @@ mpiexec -n 2 python -m mpi4py.bench helloworld
 mpiexec -n 2 python -m mpi4py.bench ringtest
 
 python ${RECIPE_DIR}/test_mpi4py.py
+
+pip check
