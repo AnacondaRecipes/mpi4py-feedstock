@@ -1,5 +1,11 @@
-{% set version = '3.0.3' %}
-{% set mpi = mpi or 'mpich' %}
+{% set version = '3.1.4' %}
+
+{% if win %}
+  # msmpi is the only MPI variant for Windows
+  {% set mpi ='msmpi' %}
+{% else %}
+  {% set mpi = mpi or 'mpich' %}
+{% endif %}
 
 package:
   name: mpi4py
@@ -7,14 +13,16 @@ package:
 
 source:
   fn: mpi4py-{{ version }}.tar.gz
-  url: https://bitbucket.org/mpi4py/mpi4py/downloads/mpi4py-{{ version }}.tar.gz
-  sha256: a9f8f549781a2757988eb536fd5f088d8b1f94c2a79ed9724c12f9a6f7d188d1
+  url: https://github.com/mpi4py/mpi4py/releases/download/{{ version }}/mpi4py-{{ version }}.tar.gz
+  sha256: 17858f2ebc623220d0120d1fa8d428d033dde749c4bc35b33d81a66ad7f93480
 
 build:
   number: 0
-  script: pip install --no-deps .
-  # TODO: build with msmpi when it works
-  skip: true  # [win]
+  script: 
+    - {{ PYTHON }} conf/cythonize.py
+    - {{ PYTHON }} -m pip install --no-deps . -vv
+  # s390x is missing a mpi variant (no openmpi or mpich)
+  skip: True  # [py<36 or s390x]
 
 requirements:
   build:
@@ -22,16 +30,21 @@ requirements:
   host:
     - python
     - pip
+    - cython
+    - setuptools
+    - wheel
     - {{ mpi }}
   run:
     - python
     - {{ mpi }}
 
-test: {}
+test:
+  requires:
+    - pip
 
 about:
-  home: https://mpi4py.bitbucket.io/
-  license: BSD 2-clause
+  home: https://github.com/mpi4py/mpi4py
+  license: BSD-2-Clause
   license_family: BSD
   license_file: LICENSE.rst
   summary: Python bindings for MPI
@@ -39,8 +52,8 @@ about:
      MPI for Python provides bindings of the Message Passing Interface (MPI)
      standard for the Python programming language, allowing any Python program
      to exploit multiple processors.
-  doc_url: https://mpi4py.readthedocs.org/
-  dev_url: https://bitbucket.org/mpi4py/mpi4py
+  doc_url: https://mpi4py.readthedocs.io/
+  dev_url: https://github.com/mpi4py/mpi4py
 
 extra:
   recipe-maintainers:
@@ -50,3 +63,6 @@ extra:
     - ocefpaf
     - davidbrochart
     - SylvainCorlay
+  skip-lints:
+    - missing_doc_source_url
+    - missing_license_url

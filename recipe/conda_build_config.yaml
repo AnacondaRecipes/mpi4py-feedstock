@@ -1,7 +1,12 @@
 mpi:
-  - mpich
-  - openmpi
+  - mpich    # [not win]
+  - openmpi  # [not win]
+  - msmpi    # [win]
 
 pin_run_as_build:
   mpich: x.x
   openmpi: x.x
+  msmpi: x.x
+
+c_compiler_version:  # [linux and x86_64]
+  - 7.5              # [linux and x86_64]
