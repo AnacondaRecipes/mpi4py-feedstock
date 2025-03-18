@@ -5,4 +5,4 @@ mpi:
   - msmpi    # [win]
 
 libabseil:
-  - "2025*"
+  - 20250127.0.*
