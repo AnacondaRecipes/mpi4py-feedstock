@@ -22,6 +22,9 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - conda-libmamba-solver
+    - libmambapy
+    - python
   host:
     - python
     - pip
