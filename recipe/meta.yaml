@@ -29,7 +29,7 @@ requirements:
     - python-build
     - cython
     - {{ mpi | replace('impi', 'impi-devel') }}
-    - libabseil 20250127.0
+    - libabseil {{ libabseil }}
   run:
     - python
     - {{ mpi | replace('impi', 'impi_rt') }}

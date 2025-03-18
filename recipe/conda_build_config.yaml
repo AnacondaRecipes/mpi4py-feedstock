@@ -3,3 +3,6 @@ mpi:
   - openmpi  # [not win]
   - impi     # [not osx and x86_64]
   - msmpi    # [win]
+
+libabseil:
+  - 20250127.0
