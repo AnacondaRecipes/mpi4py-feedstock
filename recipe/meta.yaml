@@ -36,7 +36,6 @@ requirements:
 # ModuleNotFoundError: No module named 'test_util_pool'
 {% set tests_to_skip = "TestProcessPool" %}
 
-TestProcessPool
 test:
   source_files:
     - test
