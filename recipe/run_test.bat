@@ -19,8 +19,11 @@ if errorlevel 1 exit 1
 mpiexec -n 2 python -m mpi4py.bench ringtest
 if errorlevel 1 exit 1
 
-python %RECIPE_DIR%\test_mpi4py.py
+"%PYTHON%" %RECIPE_DIR%\test_mpi4py.py
 if errorlevel 1 exit 1
 
 pip check
 if errorlevel 1 exit 1
+
+@REM "%PYTHON%" -c "import mpi4py;import mpi4py.MPI;import mpi4py.futures;import mpi4py.util.dtlib;import mpi4py.util.pkl5;import mpi4py.util.sync;import mpi4py.util.pool"
+@REM if errorlevel 1 exit 1

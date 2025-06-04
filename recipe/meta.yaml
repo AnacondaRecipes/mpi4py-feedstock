@@ -1,6 +1,5 @@
 {% set version = '4.0.3' %}
 {% set name = "mpi4py" %}
-{% set mpi = mpi or 'mpich' %}
 
 package:
   name: {{ name }}
@@ -14,41 +13,27 @@ build:
   number: 0
   script:
     - del src\\mpi.pth"  # [win]
-    - export I_MPI_CC=$CC  # [mpi == "impi"]
     - {{ PYTHON }} -m pip install --no-deps --no-build-isolation . -vv
-    # run_exports:
-    #   - {{ pin_subpackage("mpi4py", max_pin="x") }}
+  run_exports:
+    - {{ pin_subpackage("mpi4py", max_pin="x") }}
 requirements:
   build:
     - {{ compiler('c') }}
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
-    - openmpi                                # [build_platform != target_platform and mpi == "openmpi"]
   host:
     - python
     - pip
     - setuptools
+    - wheel
     - python-build
     - cython
-    - impi-devel  # [mpi == "impi"]
-    - {{ mpi }}  # [mpi != "impi"]
+    - mpich  # [unix]
+    - msmpi  # [win]
   run:
     - python
-    - {{ pin_compatible("msmpi") }} # [mpi == "msmpi"]
-  run_exports:
-    - {{ pin_subpackage("mpi4py", max_pin="x") }}
 
-tests:
-  - python:
-      imports:
-        - mpi4py
-        - mpi4py.MPI
-        - mpi4py.futures
-        - mpi4py.util.dtlib
-        - mpi4py.util.pkl5
-        - mpi4py.util.pool
-        - mpi4py.util.sync
+test:
+  requires:
+    - pip
 
 about:
   home: https://mpi4py.github.io
