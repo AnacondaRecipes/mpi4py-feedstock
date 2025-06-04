@@ -12,17 +12,15 @@ package:
   version: {{ version }}
 
 source:
-  fn: mpi4py-{{ version }}.tar.gz
   url: https://github.com/mpi4py/mpi4py/releases/download/{{ version }}/mpi4py-{{ version }}.tar.gz
   sha256: 17858f2ebc623220d0120d1fa8d428d033dde749c4bc35b33d81a66ad7f93480
 
 build:
-  number: 0
+  number: 1
   script: 
     - {{ PYTHON }} conf/cythonize.py
-    - {{ PYTHON }} -m pip install --no-deps . -vv
-  # s390x is missing a mpi variant (no openmpi or mpich)
-  skip: True  # [py<36 or s390x]
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<36]
 
 requirements:
   build:
