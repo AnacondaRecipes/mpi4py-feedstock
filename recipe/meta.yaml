@@ -35,6 +35,14 @@ requirements:
 test:
   source_files:
     - test
+  imports:
+    - mpi4py
+    - mpi4py.MPI
+    - mpi4py.futures
+    - mpi4py.util.dtlib
+    - mpi4py.util.pkl5
+    - mpi4py.util.sync
+    - mpi4py.util.pool
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
