@@ -10,7 +10,7 @@ print(vendor, version)
 print(MPI.Get_library_version())
 
 # verify get_config paths exist (not links to build env)
-config = mpi4py.ˇ()
+config = mpi4py.get_config()
 print(f"config={config}")
 
 if vendor == 'Microsoft MPI':
