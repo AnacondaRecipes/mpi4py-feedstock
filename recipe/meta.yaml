@@ -12,10 +12,7 @@ source:
 build:
   number: 0
   script:
-    - del src\\mpi.pth"  # [win]
     - {{ PYTHON }} -m pip install --no-deps --no-build-isolation . -vv
-  run_exports:
-    - {{ pin_subpackage("mpi4py", max_pin="x") }}
 requirements:
   build:
     - {{ compiler('c') }}
@@ -24,7 +21,6 @@ requirements:
     - pip
     - wheel
     - setuptools >=42
-    - python-build
     - cython
     - mpich  # [unix]
     - msmpi  # [win]
@@ -39,19 +35,15 @@ requirements:
 test:
   source_files:
     - test
-  imports:
-    - mpi4py
-    - mpi4py.MPI
-    - mpi4py.futures
-    - mpi4py.util.dtlib
-    - mpi4py.util.pkl5
-    - mpi4py.util.sync
-    - mpi4py.util.pool
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -v -k "not {{ tests_to_skip }}" tests
+    - pytest -v -k "not {{ tests_to_skip }}" test
     - mpiexec -n 1 python -m mpi4py --version
+    - mpiexec -n 1 python -m mpi4py --mpi-std-version
+    - mpiexec -n 1 python -m mpi4py --mpi-lib-version
+    - mpiexec -n 2 python -m mpi4py.bench helloworld
+    - mpiexec -n 2 python -m mpi4py.bench ringtest
   requires:
     - pip
     - pytest
