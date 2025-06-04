@@ -46,7 +46,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -v -k "not {{ tests_to_skip }}" test
+    - pytest -v -k "not {{ tests_to_skip }}" test  # [unix]
     - mpiexec -n 1 python -m mpi4py --version
     - mpiexec -n 1 python -m mpi4py --mpi-std-version
     - mpiexec -n 1 python -m mpi4py --mpi-lib-version
