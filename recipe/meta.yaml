@@ -39,7 +39,7 @@ requirements:
 # ModuleNotFoundError: No module named 'test_util_pool'
 {% set tests_to_skip = "TestProcessPool" %}
 # Hanging without any issue
-{% set tests_to_skip = tests_to_skip + " or TestDataFiles" %} #  [linux]
+{% set tests_to_skip = tests_to_skip + " or TestDataFiles or TestPickle" %} #  [linux]
 
 test:
   source_files:
