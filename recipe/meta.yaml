@@ -23,25 +23,25 @@ requirements:
     - wheel
     - setuptools >=42
     - cython >=3.0.0
-    - mpich  # [unix]
-    - msmpi  # [win]
+    - mpich {{ mpich }}  # [unix]
+    - msmpi 10.1.1  # [win]
   run:
     - python
-    - mpich  # [unix]
-    - msmpi  # [win]
+    - mpich  # [unix] through run_exports
+    - {{ pin_compatible('msmpi', max_pin='x') }}
 
 {% set ignore_tests = "" %}
 # Windows fatal exception: access violation
-{% set ignore_tests = "--ignore=test/test_cco_buf.py --ignore=test/test_cco_nb_buf.py" %} #  [win]
+{% set ignore_tests = "--ignore=test/test_cco_buf.py --ignore=test/test_cco_nb_buf.py" %}  # [win]
 # AssertionError: generated error class is 'ERR_OTHER' (15), but expected '['ERR_INFO', 'ERR_ARG']' ([28, 12])
-{% set ignore_tests = ignore_tests + " --ignore=test/test_exceptions.py" %} #  [win]
+{% set ignore_tests = ignore_tests + " --ignore=test/test_exceptions.py" %}  # [win]
 # Hanging without any issue
-{% set ignore_tests = ignore_tests + " --ignore=test/test_rma.py --ignore=test/test_rma_nb.py --ignore=test/test_spawn.py" %} #  [linux]
+{% set ignore_tests = ignore_tests + " --ignore=test/test_rma.py --ignore=test/test_rma_nb.py --ignore=test/test_spawn.py" %}  # [linux]
 
 # ModuleNotFoundError: No module named 'test_util_pool'
 {% set tests_to_skip = "TestProcessPool" %}
 # Hanging without any issue
-{% set tests_to_skip = tests_to_skip + " or TestDataFiles or TestPickle" %} #  [linux]
+{% set tests_to_skip = tests_to_skip + " or TestDataFiles or TestPickle" %}  # [linux]
 
 test:
   source_files:
