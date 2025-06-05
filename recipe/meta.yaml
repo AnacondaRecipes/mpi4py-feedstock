@@ -22,7 +22,7 @@ requirements:
     - pip
     - wheel
     - setuptools >=42
-    - cython >= 3.0.0
+    - cython >=3.0.0
     - mpich  # [unix]
     - msmpi  # [win]
   run:
