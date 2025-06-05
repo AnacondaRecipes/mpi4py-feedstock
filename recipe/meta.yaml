@@ -28,7 +28,7 @@ requirements:
   run:
     - python
     - mpich  # [unix] through run_exports
-    - {{ pin_compatible('msmpi', max_pin='x') }}
+    - {{ pin_compatible('msmpi', max_pin='x') }}  # [win]
 
 {% set ignore_tests = "" %}
 # Windows fatal exception: access violation
