@@ -30,8 +30,16 @@ requirements:
     - mpich  # [unix]
     - msmpi  # [win]
 
+{% set ignore_tests = "" %}
+# Windows fatal exception: access violation
+{% set ignore_tests = "--ignore=test/test_cco_buf.py --ignore=test/test_cco_nb_buf.py" %} #  [win]
+# AssertionError: generated error class is 'ERR_OTHER' (15), but expected '['ERR_INFO', 'ERR_ARG']' ([28, 12])
+{% set ignore_tests = ignore_tests + " --ignore=test/test_exceptions.py" %} #  [win]
+
 # ModuleNotFoundError: No module named 'test_util_pool'
 {% set tests_to_skip = "TestProcessPool" %}
+# Hanging without any issue
+{% set tests_to_skip = tests_to_skip + " or TestDataFiles" %} #  [linux]
 
 test:
   source_files:
@@ -47,9 +55,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -v -k "not {{ tests_to_skip }}" test #  [osx]
-    # On Linux/Windows full testscope hanging/failed without any specific issue. Re-check during version update.
-    - pytest -v test/test_toplevel.py test/test_environ.py test/test_package.py test/test_pack.py test/test_attributes.py  #  [win or linux]
+    - pytest -v {{ ignore_tests }} -k "not({{ tests_to_skip }})" test
     - mpiexec -n 1 python -m mpi4py --version
     - mpiexec -n 1 python -m mpi4py --mpi-std-version
     - mpiexec -n 1 python -m mpi4py --mpi-lib-version
