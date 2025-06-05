@@ -13,6 +13,7 @@ build:
   number: 0
   script:
     - {{ PYTHON }} -m pip install --no-deps --no-build-isolation . -vv
+  skip: True  # [py<36 or py>313]
 requirements:
   build:
     - {{ compiler('c') }}
@@ -21,7 +22,7 @@ requirements:
     - pip
     - wheel
     - setuptools >=42
-    - cython
+    - cython >= 3.0.0
     - mpich  # [unix]
     - msmpi  # [win]
   run:
@@ -46,8 +47,8 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    # On Linux/Windows full testscope hanging without any issue. Re-check during version update.
     - pytest -v -k "not {{ tests_to_skip }}" test #  [osx]
+    # On Linux/Windows full testscope hanging/failed without any specific issue. Re-check during version update.
     - pytest -v test/test_toplevel.py test/test_environ.py test/test_package.py test/test_pack.py test/test_attributes.py  #  [win or linux]
     - mpiexec -n 1 python -m mpi4py --version
     - mpiexec -n 1 python -m mpi4py --mpi-std-version
