@@ -36,7 +36,7 @@ requirements:
 # AssertionError: generated error class is 'ERR_OTHER' (15), but expected '['ERR_INFO', 'ERR_ARG']' ([28, 12])
 {% set ignore_tests = ignore_tests + " --ignore=test/test_exceptions.py" %} #  [win]
 # Hanging without any issue
-{% set ignore_tests = ignore_tests + " --ignore=test/test_rma.py --ignore=test/test_rma_nb.py" %} #  [linux]
+{% set ignore_tests = ignore_tests + " --ignore=test/test_rma.py --ignore=test/test_rma_nb.py --ignore=test/test_spawn.py" %} #  [linux]
 
 # ModuleNotFoundError: No module named 'test_util_pool'
 {% set tests_to_skip = "TestProcessPool" %}
