@@ -27,7 +27,7 @@ requirements:
     - msmpi 10.1.1  # [win]
   run:
     - python
-    - mpich  # [unix] through run_exports
+    - mpich  # [unix]
     - {{ pin_compatible('msmpi', max_pin='x') }}  # [win]
 
 {% set ignore_tests = "" %}
