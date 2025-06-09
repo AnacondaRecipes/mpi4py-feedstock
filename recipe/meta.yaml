@@ -1,50 +1,75 @@
-{% set version = '3.1.4' %}
-
-{% if win %}
-  # msmpi is the only MPI variant for Windows
-  {% set mpi ='msmpi' %}
-{% else %}
-  {% set mpi = mpi or 'mpich' %}
-{% endif %}
+{% set version = '4.0.3' %}
+{% set name = "mpi4py" %}
 
 package:
-  name: mpi4py
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  fn: mpi4py-{{ version }}.tar.gz
-  url: https://github.com/mpi4py/mpi4py/releases/download/{{ version }}/mpi4py-{{ version }}.tar.gz
-  sha256: 17858f2ebc623220d0120d1fa8d428d033dde749c4bc35b33d81a66ad7f93480
+  url: https://github.com/{{ name }}/{{ name }}/releases/download/{{ version }}/{{ name }}-{{ version }}.tar.gz
+  sha256: de2710d73e25e115865a3ab63d34a54b2d8608b724f761c567b6ad58dd475609
 
 build:
   number: 0
-  script: 
-    - {{ PYTHON }} conf/cythonize.py
-    - {{ PYTHON }} -m pip install --no-deps . -vv
-  # s390x is missing a mpi variant (no openmpi or mpich)
-  skip: True  # [py<36 or s390x]
-
+  script:
+    - {{ PYTHON }} -m pip install --no-deps --no-build-isolation . -vv
+  skip: True  # [py<36 or py>313]
 requirements:
   build:
     - {{ compiler('c') }}
   host:
     - python
     - pip
-    - cython
-    - setuptools
     - wheel
-    - {{ mpi }}
+    - setuptools >=42
+    - cython >=3.0.0
+    - mpich {{ mpich }}  # [unix]
+    - msmpi 10.1.1  # [win]
   run:
     - python
-    - {{ mpi }}
+    - mpich  # [unix]
+    - {{ pin_compatible('msmpi', max_pin='x') }}  # [win]
+
+{% set ignore_tests = "" %}
+# Windows fatal exception: access violation
+{% set ignore_tests = "--ignore=test/test_cco_buf.py --ignore=test/test_cco_nb_buf.py" %}  # [win]
+# AssertionError: generated error class is 'ERR_OTHER' (15), but expected '['ERR_INFO', 'ERR_ARG']' ([28, 12])
+{% set ignore_tests = ignore_tests + " --ignore=test/test_exceptions.py" %}  # [win]
+# Hanging without any issue
+{% set ignore_tests = ignore_tests + " --ignore=test/test_rma.py --ignore=test/test_rma_nb.py --ignore=test/test_spawn.py" %}  # [linux]
+
+# ModuleNotFoundError: No module named 'test_util_pool'
+{% set tests_to_skip = "TestProcessPool" %}
+# Hanging without any issue
+{% set tests_to_skip = tests_to_skip + " or TestDataFiles or TestPickle" %}  # [linux]
 
 test:
+  source_files:
+    - test
+  imports:
+    - mpi4py
+    - mpi4py.MPI
+    - mpi4py.futures
+    - mpi4py.util.dtlib
+    - mpi4py.util.pkl5
+    - mpi4py.util.sync
+    - mpi4py.util.pool
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -v {{ ignore_tests }} -k "not({{ tests_to_skip }})" test
+    - mpiexec -n 1 python -m mpi4py --version
+    - mpiexec -n 1 python -m mpi4py --mpi-std-version
+    - mpiexec -n 1 python -m mpi4py --mpi-lib-version
+    - mpiexec -n 2 python -m mpi4py.bench helloworld
+    - mpiexec -n 2 python -m mpi4py.bench ringtest
   requires:
     - pip
+    - pytest
 
 about:
-  home: https://github.com/mpi4py/mpi4py
-  license: BSD-2-Clause
+  home: https://mpi4py.github.io
+  license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.rst
   summary: Python bindings for MPI
@@ -52,7 +77,7 @@ about:
      MPI for Python provides bindings of the Message Passing Interface (MPI)
      standard for the Python programming language, allowing any Python program
      to exploit multiple processors.
-  doc_url: https://mpi4py.readthedocs.io/
+  doc_url: https://mpi4py.readthedocs.org
   dev_url: https://github.com/mpi4py/mpi4py
 
 extra:
@@ -63,6 +88,3 @@ extra:
     - ocefpaf
     - davidbrochart
     - SylvainCorlay
-  skip-lints:
-    - missing_doc_source_url
-    - missing_license_url
