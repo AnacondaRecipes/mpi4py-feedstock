@@ -1,19 +1,34 @@
-{% set version = '4.0.3' %}
+{% set version = "4.1.2" %}
 {% set name = "mpi4py" %}
+{% set ignore_tests = "" %}
+{% set ignore_tests = "--ignore=test/test_cco_buf.py --ignore=test/test_cco_nb_buf.py" %}  # [win]
+{% set ignore_tests = ignore_tests + " --ignore=test/test_exceptions.py" %}  # [win]
+{% set ignore_tests = ignore_tests + " --ignore=test/test_rma.py --ignore=test/test_rma_nb.py --ignore=test/test_spawn.py" %}  # [linux]
+{% set tests_to_skip = "TestProcessPool" %}
+{% set tests_to_skip = tests_to_skip + " or TestDataFiles or TestPickle" %}  # [linux]
+{% set tests_to_skip = tests_to_skip + " or testDoc" %}
 
+# Windows fatal exception: access violation
+# AssertionError: generated error class is 'ERR_OTHER' (15), but expected '['ERR_INFO', 'ERR_ARG']' ([28, 12])
+# Hanging without any issue
+# ModuleNotFoundError: No module named 'test_util_pool'
+# Hanging without any issue
+# TestDoc is failing on all platforms: True is not False.
+# Skip doctests for now.
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://github.com/{{ name }}/{{ name }}/releases/download/{{ version }}/{{ name }}-{{ version }}.tar.gz
-  sha256: de2710d73e25e115865a3ab63d34a54b2d8608b724f761c567b6ad58dd475609
+  sha256: 56860286dc45f20e8821e93cb06669e30462348bf866f685553fa4b712d58d02
 
 build:
-  number: 1
+  number: 0
   script:
     - {{ PYTHON }} -m pip install --no-deps --no-build-isolation . -vv
-  skip: True  # [py<36]
+  skip: true  # [py<36]
+
 requirements:
   build:
     - {{ stdlib('c') }}
@@ -26,27 +41,10 @@ requirements:
     - pip
     - python-build
     - setuptools >=42
-    - wheel
   run:
     - python
     - mpich  # [unix]
     - {{ pin_compatible('msmpi', max_pin='x') }}  # [win]
-
-{% set ignore_tests = "" %}
-# Windows fatal exception: access violation
-{% set ignore_tests = "--ignore=test/test_cco_buf.py --ignore=test/test_cco_nb_buf.py" %}  # [win]
-# AssertionError: generated error class is 'ERR_OTHER' (15), but expected '['ERR_INFO', 'ERR_ARG']' ([28, 12])
-{% set ignore_tests = ignore_tests + " --ignore=test/test_exceptions.py" %}  # [win]
-# Hanging without any issue
-{% set ignore_tests = ignore_tests + " --ignore=test/test_rma.py --ignore=test/test_rma_nb.py --ignore=test/test_spawn.py" %}  # [linux]
-
-# ModuleNotFoundError: No module named 'test_util_pool'
-{% set tests_to_skip = "TestProcessPool" %}
-# Hanging without any issue
-{% set tests_to_skip = tests_to_skip + " or TestDataFiles or TestPickle" %}  # [linux]
-# TestDoc is failing on all platforms: True is not False.
-# Skip doctests for now.
-{% set tests_to_skip = tests_to_skip + " or testDoc" %}
 
 test:
   source_files:
@@ -79,9 +77,9 @@ about:
   license_file: LICENSE.rst
   summary: Python bindings for MPI
   description: |
-     MPI for Python provides bindings of the Message Passing Interface (MPI)
-     standard for the Python programming language, allowing any Python program
-     to exploit multiple processors.
+    MPI for Python provides bindings of the Message Passing Interface (MPI)
+    standard for the Python programming language, allowing any Python program
+    to exploit multiple processors.
   doc_url: https://mpi4py.readthedocs.org
   dev_url: https://github.com/mpi4py/mpi4py
 
