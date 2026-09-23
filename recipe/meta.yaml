@@ -1,4 +1,4 @@
-{% set version = '4.0.3' %}
+{% set version = '4.1.2' %}
 {% set name = "mpi4py" %}
 
 package:
@@ -7,20 +7,20 @@ package:
 
 source:
   url: https://github.com/{{ name }}/{{ name }}/releases/download/{{ version }}/{{ name }}-{{ version }}.tar.gz
-  sha256: de2710d73e25e115865a3ab63d34a54b2d8608b724f761c567b6ad58dd475609
+  sha256: 56860286dc45f20e8821e93cb06669e30462348bf866f685553fa4b712d58d02
 
 build:
-  number: 1
+  number: 0
   script:
     - {{ PYTHON }} -m pip install --no-deps --no-build-isolation . -vv
-  skip: True  # [py<36]
+  skip: true  # [py<38]
 requirements:
   build:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
   host:
     - python
-    - cython >=3.0.0
+    - cython >=3.0.1
     - mpich {{ mpich }}  # [unix]
     - msmpi 10.1.1  # [win]
     - pip
